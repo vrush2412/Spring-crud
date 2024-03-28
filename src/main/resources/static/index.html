@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Employee List</title>
+  </head>
+  <body>
+    <h1>Employee List</h1>
+    <div>
+      <h2>Insert Employee Data</h2>
+
+    <div class="container mt-5">
+      <form action="addEmployee" method="post">
+        <label for="emi_id">Enter EMI ID:</label>
+        <input type="text" id="emi_id" name="emi_id"><br><br>
+        <label for="name">Enter Name:</label>
+        <input type="text" id="name" name="name"><br><br>
+        <label for="salary"> Enter Salary:</label>
+        <input type="text" id="salary" name="salary"><br><br>
+        <input type="submit" value="Add Employee">
+      </form>
+      </div>
+    </div>
+    <div>
+      <!-- <h2>Update Employee</h2>
+      <form id="updateEmployeeForm">
+        <label for="updateEmiId">EMI ID:</label>
+        <input type="text" id="updateEmiId" name="emi_id"><br><br>
+        <input type="submit" value="Get Employee">
+      </form>
+      <div id="updateEmployeeFields"></div>
+      <button id="updateButton" style="display: none;">Update Employee</button>
+    </div>
+    <div>
+      <h2>Employee List</h2>
+      <ul id="employeeList"></ul>
+    </div> -->
+    
+    <script>
+      const apiUrl = 'https://localhost:1111';
+      
+      const addEmployee = document.getElementById('addEmployee');
+      addEmployee.addEventListener('submit', addEmployee);
+      
+      // const updateEmployeeForm = document.getElementById('updateEmployeeForm');
+      // updateEmployeeForm.addEventListener('submit', getEmployee);
+      
+      // const updateButton = document.getElementById('updateButton');
+      // updateButton.addEventListener('click', updateEmployee);
+      
+      loadEmployees();
+      
+      function loadEmployees() {
+        fetch(apiUrl)
+          .then(response => response.json())
+          .then(data => {
+            const employeeList = document.getElementById('employeeList');
+            employeeList.innerHTML = '';
+            data.forEach(employee => {
+              const li = document.createElement('li');
+              li.innerText = `${employee.emi_id}: ${employee.name} - $${employee.salary}`;
+              employeeList.appendChild(li);
+            });
+          })
+          .catch(error => console.error(error));
+      }
+      
+      function addEmployee(event) {
+        event.preventDefault();
+        const emiId = document.getElementById('emi_id').value;
+        const name = document.getElementById('name').value;
+        const salary = document.getElementById('salary').value;
+        const data = {
+          emi_id: emiId,
+          name: name,
+          salary: salary
+        };
+        fetch(apiUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+        })
+          .then(response => {
+            if (response.ok) {
+              loadEmployees();
+              addEmployeeForm.reset();
+            } else {
+              console.error(`Failed to add employee: ${response.status} - ${response.statusText}`);
+            }
+          })
+          .catch(error => console.error(error));
+      }
+      </script>
+</body>
+</html>
